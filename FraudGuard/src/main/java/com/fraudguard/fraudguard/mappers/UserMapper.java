@@ -1,0 +1,38 @@
+package com.fraudguard.fraudguard.mappers;
+
+import com.fraudguard.fraudguard.dto.request.RegisterRequest;
+import com.fraudguard.fraudguard.data.models.Agent;
+import com.fraudguard.fraudguard.data.models.RegularUser;
+import com.fraudguard.fraudguard.data.models.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UserMapper {
+
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public UserMapper(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public User fromRegisterRequest(RegisterRequest request) {
+        User user;
+
+        if (request.getRole().equalsIgnoreCase("AGENT")) {
+            user = new Agent();
+        } else {
+            user = new RegularUser();
+        }
+
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole().toUpperCase());
+
+        return user;
+
+    }
+}
+
