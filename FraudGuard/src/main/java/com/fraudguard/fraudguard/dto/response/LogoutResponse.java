@@ -7,10 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class LoginResponse {
+public class LogoutResponse {
 
     private String message;
-    private String userId;
-    private String role;
-    private String token;
+
 }

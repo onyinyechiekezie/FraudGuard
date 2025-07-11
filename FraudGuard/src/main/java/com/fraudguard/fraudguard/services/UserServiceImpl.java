@@ -5,6 +5,7 @@ import com.fraudguard.fraudguard.data.repositories.UserRepository;
 import com.fraudguard.fraudguard.dto.request.LoginRequest;
 import com.fraudguard.fraudguard.dto.request.RegisterRequest;
 import com.fraudguard.fraudguard.dto.response.LoginResponse;
+import com.fraudguard.fraudguard.dto.response.LogoutResponse;
 import com.fraudguard.fraudguard.dto.response.RegisterResponse;
 import com.fraudguard.fraudguard.exceptions.EmailAlreadyExistsException;
 import com.fraudguard.fraudguard.exceptions.LoginFailedException;
@@ -12,6 +13,9 @@ import com.fraudguard.fraudguard.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +50,32 @@ public class UserServiceImpl implements UserService {
             throw new LoginFailedException("Invalid email or password");
         }
 
+        String sessionToken = UUID.randomUUID().toString();
+        user.setSessionToken(sessionToken);
+        userRepository.save(user);
+
         return new LoginResponse(
                 "Login successful",
                 user.getId(),
-                user.getRole().name()
+                user.getRole().name(),
+                sessionToken
         );
     }
+
+    @Override
+    public LogoutResponse logout(String token) {
+        Optional<User> userOpt = userRepository.findBySessionToken(token);
+        if (userOpt.isEmpty()) {
+            throw new RuntimeException("Invalid session token or already logged out");
+        }
+
+        User user = userOpt.get();
+        user.setSessionToken(null);
+        userRepository.save(user);
+
+        return new LogoutResponse("User logged out successfully");
+    }
+
 
 
 }

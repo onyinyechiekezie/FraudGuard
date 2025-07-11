@@ -1,5 +1,6 @@
 package com.fraudguard.fraudguard.controllers;
 
+import com.fraudguard.fraudguard.data.models.User;
 import com.fraudguard.fraudguard.dto.request.LoginRequest;
 import com.fraudguard.fraudguard.dto.request.RegisterRequest;
 import com.fraudguard.fraudguard.dto.response.LoginResponse;
@@ -8,10 +9,7 @@ import com.fraudguard.fraudguard.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,4 +29,11 @@ public class AuthController {
         LoginResponse response = userService.login(request);
         return ResponseEntity.ok(response);
     }
+//
+//    @GetMapping("/profile")
+//    public ResponseEntity<UserProfileResponse> getProfile(@RequestHeader("X-Auth-Token") String token) {
+//        User user = userService.getUserByToken(token); // throws error if token is invalid
+//        return ResponseEntity.ok(new UserProfileResponse(user.getFirstname(), user.getEmail()));
+//    }
+
 }
