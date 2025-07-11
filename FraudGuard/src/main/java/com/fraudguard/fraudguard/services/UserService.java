@@ -1,16 +1,15 @@
 package com.fraudguard.fraudguard.services;
 
-import com.fraudguard.fraudguard.data.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
+import com.fraudguard.fraudguard.dto.request.LoginRequest;
+import com.fraudguard.fraudguard.dto.request.RegisterRequest;
+import com.fraudguard.fraudguard.dto.response.LoginResponse;
+import com.fraudguard.fraudguard.dto.response.RegisterResponse;
 
-    private final UserRepository userRepo;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+public interface UserService {
 
 
+    RegisterResponse register(RegisterRequest request);
+
+    LoginResponse login(LoginRequest request);
 }

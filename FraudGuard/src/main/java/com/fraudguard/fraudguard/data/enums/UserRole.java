@@ -1,4 +1,8 @@
 package com.fraudguard.fraudguard.data.enums;
 
-public class UserRole {
+public enum UserRole {
+
+    AGENT,
+    REGULAR_USER,
+    ADMIN,
 }

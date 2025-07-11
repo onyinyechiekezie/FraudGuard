@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @Document(collection = "users")
 @NoArgsConstructor
-public class User {
+public abstract class User {
 
     @Id
     private String id;
