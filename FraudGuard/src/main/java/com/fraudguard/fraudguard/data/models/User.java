@@ -24,5 +24,6 @@ public abstract class User {
     private String location;
     private UserRole role;
     private String image;
+    private String sessionToken;
 
 }
