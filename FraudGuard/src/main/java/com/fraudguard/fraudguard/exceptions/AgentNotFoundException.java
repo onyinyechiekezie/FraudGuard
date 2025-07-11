@@ -1,4 +1,10 @@
 package com.fraudguard.fraudguard.exceptions;
 
-public interface AgentNotFoundException {
+public class AgentNotFoundException extends RuntimeException {
+
+    public AgentNotFoundException(String message) {
+        super(message);
+    }
+
 }
+

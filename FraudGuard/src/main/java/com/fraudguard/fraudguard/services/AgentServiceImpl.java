@@ -2,6 +2,7 @@ package com.fraudguard.fraudguard.services;
 
 import com.fraudguard.fraudguard.data.models.Agent;
 import com.fraudguard.fraudguard.data.repositories.AgentRepository;
+import com.fraudguard.fraudguard.exceptions.AgentNotFoundException;
 import com.fraudguard.fraudguard.services.AgentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,10 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public Agent getAgentById(String id) {
-        return null;
+        return agentRepository.findById(id)
+                .orElseThrow(() -> new AgentNotFoundException("Agent not found with ID: " + id));
     }
+
 }
 
 
