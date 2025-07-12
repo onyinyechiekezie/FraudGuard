@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         user.setSessionToken(null);
         userRepository.save(user);
 
-        return new LogoutResponse("User logged out successfully");
+        return new LogoutResponse("You've been logged out successfully");
     }
 
 
