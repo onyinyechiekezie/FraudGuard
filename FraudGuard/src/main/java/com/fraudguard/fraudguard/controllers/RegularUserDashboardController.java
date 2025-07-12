@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/regular")
-@RequiredArgsConstructor
-public class RegularUserDashboardController {
-
-    private final RegularUserService regularUserService;
-
-    @GetMapping("/dashboard")
-    public ResponseEntity<RegularDashboardResponse> getDashboard(
-            @RequestHeader("X-Auth-Token") String token) {
-
-        RegularUser user = regularUserService.getRegularUserByToken(token);
-
-        RegularDashboardResponse response = new RegularDashboardResponse(
-                "Welcome back, " + user.getFirstname(),
-                List.of("🔔 Transaction alert received", "📣 New fraud tip available"),
-                "You’ve had 3 verified transactions today"
-        );
-
-        return ResponseEntity.ok(response);
-    }
-}
+//@RestController
+//@RequestMapping("/api/regular")
+//@RequiredArgsConstructor
+//public class RegularUserDashboardController {
+//
+//    private final RegularUserService regularUserService;
+//
+//    @GetMapping("/dashboard")
+//    public ResponseEntity<RegularDashboardResponse> getDashboard(
+//            @RequestHeader("X-Auth-Token") String token) {
+//
+//        RegularUser user = regularUserService.getRegularUserByToken(token);
+//
+//        RegularDashboardResponse response = new RegularDashboardResponse(
+//                "Welcome back, " + user.getFirstname(),
+//                List.of("🔔 Transaction alert received", "📣 New fraud tip available"),
+//                "You’ve had 3 verified transactions today"
+//        );
+//
+//        return ResponseEntity.ok(response);
+//    }
+//}
