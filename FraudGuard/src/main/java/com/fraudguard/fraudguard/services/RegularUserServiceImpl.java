@@ -3,7 +3,9 @@ package com.fraudguard.fraudguard.services;
 import com.fraudguard.fraudguard.data.models.Notification;
 import com.fraudguard.fraudguard.data.models.RegularUser;
 import com.fraudguard.fraudguard.data.models.User;
+import com.fraudguard.fraudguard.data.repositories.ActivityLogRepository;
 import com.fraudguard.fraudguard.data.repositories.NotificationRepository;
+import com.fraudguard.fraudguard.data.repositories.TransactionLogRepository;
 import com.fraudguard.fraudguard.data.repositories.UserRepository;
 import com.fraudguard.fraudguard.dto.response.RegularUserDashboardResponse;
 import com.fraudguard.fraudguard.exceptions.AccessDeniedException;
@@ -22,6 +24,8 @@ public class RegularUserServiceImpl implements RegularUserService {
 
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
+    private final TransactionLogRepository transactionLogRepository;
+    private final ActivityLogRepository activityLogRepository;
 
     @Override
     public RegularUser getRegularUserByToken(String token) {
@@ -44,6 +48,7 @@ public class RegularUserServiceImpl implements RegularUserService {
         if (!(user instanceof RegularUser)) {
             throw new AccessDeniedException("You are not authorized to access this resource.");
         }
+        LocalDate today = LocalDate.now();
 
         // Fetch notifications
         List<String> notifications = notificationRepository.findByUserId(user.getId())
@@ -54,7 +59,7 @@ public class RegularUserServiceImpl implements RegularUserService {
                 .toList();
 
         // Count today’s flagged transactions
-        LocalDate today = LocalDate.now();
+        //LocalDate today = LocalDate.now();
         int flagged = transactionLogRepository.countByUserIdAndIsFlaggedAndTimestampBetween(
                 user.getId(), true,
                 today.atStartOfDay(),
