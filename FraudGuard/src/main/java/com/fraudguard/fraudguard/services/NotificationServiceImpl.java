@@ -5,7 +5,6 @@ import com.fraudguard.fraudguard.data.models.Notification;
 import com.fraudguard.fraudguard.data.models.User;
 import com.fraudguard.fraudguard.data.repositories.NotificationRepository;
 import com.fraudguard.fraudguard.data.repositories.UserRepository;
-import com.fraudguard.fraudguard.dto.response.NotificationResponse;
 import com.fraudguard.fraudguard.exceptions.ResourceNotFoundException;
 import com.fraudguard.fraudguard.exceptions.UnauthenticatedException;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationResponse> getUserNotifications(String token, int page, int size) {
+    public List<com.fraudguard.fraudguard.dto.response.NotificationResponse> getUserNotifications(String token, int page, int size) {
         User user = userRepository.findBySessionToken(token)
                 .orElseThrow(() -> new UnauthenticatedException("We couldn’t verify your session. Please log in again."));
 
@@ -48,7 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .findByUserId(user.getId(), pageable);
 //        did query sorting here
         return pagedNotifications.stream()
-                .map(n -> new NotificationResponse(
+                .map(n -> new com.fraudguard.fraudguard.dto.response.NotificationResponse(
                         n.getMessage(),
                         n.isRead(),
                         n.getAlertLevel(),
