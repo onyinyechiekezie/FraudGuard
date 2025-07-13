@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 @Document(collection = "agents")
 public class Agent extends User{
-    private String id;
     private List<String> registeredPoSMachines;
     private int subscriptionFee;
 }

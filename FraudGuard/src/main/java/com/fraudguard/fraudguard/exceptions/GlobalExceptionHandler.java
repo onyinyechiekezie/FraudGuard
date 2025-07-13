@@ -42,4 +42,14 @@ public class GlobalExceptionHandler extends RuntimeException {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(AgentNotFoundException.class)
+    public ResponseEntity<?> handleAgentNotFound(AgentNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                "error", "AgentNotFoundException",
+                "message", ex.getMessage()
+        ));
+    }
+
+
+
 }

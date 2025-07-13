@@ -1,21 +1,5 @@
 //package com.fraudguard.fraudguard.services;
 
-import com.fraudguard.fraudguard.data.models.Notification;
-import com.fraudguard.fraudguard.data.models.RegularUser;
-import com.fraudguard.fraudguard.data.models.User;
-import com.fraudguard.fraudguard.data.repositories.NotificationRepository;
-import com.fraudguard.fraudguard.data.repositories.UserRepository;
-import com.fraudguard.fraudguard.dto.response.RegularUserDashboardResponse;
-import com.fraudguard.fraudguard.exceptions.AccessDeniedException;
-import com.fraudguard.fraudguard.exceptions.UnauthenticatedException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Comparator;
-import java.util.List;
-
 //@Service
 //@RequiredArgsConstructor
 //public class RegularUserServiceImpl implements RegularUserService {
