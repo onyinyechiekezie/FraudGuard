@@ -66,6 +66,29 @@ public class NotificationServiceImpl implements NotificationService {
         );
     }
 
+    @Override
+    public List<com.fraudguard.fraudguard.dto.response.NotificationResponse> getUserNotifications(String token, int page, int size) {
+        User user = userRepository.findBySessionToken(token)
+                .orElseThrow(() -> new UnauthenticatedException("We couldn’t verify your session. Please log in again."));
+
+//        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "timestamp"));
+
+        List<Notification> pagedNotifications = notificationRepository
+                .findByUserId(user.getId(), pageable);
+//        did query sorting here
+        return pagedNotifications.stream()
+                .map(n -> new com.fraudguard.fraudguard.dto.response.NotificationResponse(
+                        n.getMessage(),
+                        n.isRead(),
+                        n.getAlertLevel(),
+                        n.getTimestamp()
+                ))
+                .toList();
+    }
+
+
+
 
     @Override
     public void markAsRead(String token, String notificationId) {
