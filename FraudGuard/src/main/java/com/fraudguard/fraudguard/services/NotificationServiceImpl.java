@@ -88,6 +88,30 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
 
+    @Override
+    public List<NotificationResponse> viewDailyNotifications(String token) {
+        User user = userRepository.findBySessionToken(token)
+                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
+
+        LocalDate today = LocalDate.now();
+
+        List<Notification> dailyNotifications = notificationRepository
+                .findByUserIdAndTimestampBetween(
+                        user.getId(),
+                        today.atStartOfDay(),
+                        today.atTime(LocalTime.MAX)
+                );
+
+        return dailyNotifications.stream()
+                .sorted(Comparator.comparing(Notification::getTimestamp).reversed())
+                .map(n -> new NotificationResponse(
+                        n.getMessage(),
+                        n.isRead(),
+                        n.getAlertLevel(),
+                        n.getTimestamp()
+                ))
+                .toList();
+    }
 
 
     @Override

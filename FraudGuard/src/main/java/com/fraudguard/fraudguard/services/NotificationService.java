@@ -11,7 +11,7 @@ public interface NotificationService {
 
     List<NotificationResponse> getUserNotifications(String token, int page, int size);
 
-//    List<NotificationResponse> viewDailyNotifications(String token);
+    List<NotificationResponse> viewDailyNotifications(String token);
 
     void markAsRead(String token, String notificationId);
 
