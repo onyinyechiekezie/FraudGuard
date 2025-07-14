@@ -1,6 +1,7 @@
 package com.fraudguard.fraudguard.controllers;
 
 import com.fraudguard.fraudguard.data.models.RegularUser;
+import com.fraudguard.fraudguard.dto.response.NotificationResponse;
 import com.fraudguard.fraudguard.dto.response.RegularUserDashboardResponse;
 import com.fraudguard.fraudguard.services.RegularUserService;
 import lombok.RequiredArgsConstructor;
@@ -26,4 +27,5 @@ public class RegularUserDashboardController {
         RegularUserDashboardResponse response = regularUserService.getDashboardData(token);
         return ResponseEntity.ok(response);
     }
+
 }

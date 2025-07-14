@@ -7,13 +7,16 @@ import com.fraudguard.fraudguard.data.repositories.ActivityLogRepository;
 import com.fraudguard.fraudguard.data.repositories.NotificationRepository;
 import com.fraudguard.fraudguard.data.repositories.TransactionLogRepository;
 import com.fraudguard.fraudguard.data.repositories.UserRepository;
+import com.fraudguard.fraudguard.dto.response.NotificationResponse;
 import com.fraudguard.fraudguard.dto.response.RegularUserDashboardResponse;
 import com.fraudguard.fraudguard.exceptions.AccessDeniedException;
+import com.fraudguard.fraudguard.exceptions.ResourceNotFoundException;
 import com.fraudguard.fraudguard.exceptions.UnauthenticatedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
@@ -80,4 +83,6 @@ public class RegularUserServiceImpl implements RegularUserService {
                 flagged
         );
     }
+
+
 }

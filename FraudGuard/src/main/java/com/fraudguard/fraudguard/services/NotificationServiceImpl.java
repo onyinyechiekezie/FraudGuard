@@ -5,6 +5,8 @@ import com.fraudguard.fraudguard.data.models.Notification;
 import com.fraudguard.fraudguard.data.models.User;
 import com.fraudguard.fraudguard.data.repositories.NotificationRepository;
 import com.fraudguard.fraudguard.data.repositories.UserRepository;
+import com.fraudguard.fraudguard.dto.response.NotificationResponse;
+import com.fraudguard.fraudguard.exceptions.AccessDeniedException;
 import com.fraudguard.fraudguard.exceptions.ResourceNotFoundException;
 import com.fraudguard.fraudguard.exceptions.UnauthenticatedException;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -36,25 +41,31 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<com.fraudguard.fraudguard.dto.response.NotificationResponse> getUserNotifications(String token, int page, int size) {
+    public NotificationResponse viewNotification(String token, String notificationId) {
         User user = userRepository.findBySessionToken(token)
-                .orElseThrow(() -> new UnauthenticatedException("We couldn’t verify your session. Please log in again."));
+                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
 
-//        Pageable pageable = PageRequest.of(page, size);
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "timestamp"));
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Notification not found."));
 
-        List<Notification> pagedNotifications = notificationRepository
-                .findByUserId(user.getId(), pageable);
-//        did query sorting here
-        return pagedNotifications.stream()
-                .map(n -> new com.fraudguard.fraudguard.dto.response.NotificationResponse(
-                        n.getMessage(),
-                        n.isRead(),
-                        n.getAlertLevel(),
-                        n.getTimestamp()
-                ))
-                .toList();
+        if (!notification.getUserId().equals(user.getId())) {
+            throw new AccessDeniedException("You are not authorized to view this notification.");
+        }
+
+        // Mark as read
+        if (!notification.isRead()) {
+            notification.setRead(true);
+            notificationRepository.save(notification);
+        }
+
+        return new NotificationResponse(
+                notification.getMessage(),
+                notification.isRead(),
+                notification.getAlertLevel(),
+                notification.getTimestamp()
+        );
     }
+
 
     @Override
     public void markAsRead(String token, String notificationId) {
