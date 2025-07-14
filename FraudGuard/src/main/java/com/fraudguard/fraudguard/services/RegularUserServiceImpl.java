@@ -7,6 +7,7 @@ import com.fraudguard.fraudguard.data.repositories.ActivityLogRepository;
 import com.fraudguard.fraudguard.data.repositories.NotificationRepository;
 import com.fraudguard.fraudguard.data.repositories.TransactionLogRepository;
 import com.fraudguard.fraudguard.data.repositories.UserRepository;
+import com.fraudguard.fraudguard.dto.response.DailySummaryResponse;
 import com.fraudguard.fraudguard.dto.response.NotificationResponse;
 import com.fraudguard.fraudguard.dto.response.RegularUserDashboardResponse;
 import com.fraudguard.fraudguard.exceptions.AccessDeniedException;
@@ -83,6 +84,78 @@ public class RegularUserServiceImpl implements RegularUserService {
                 flagged
         );
     }
+
+    @Override
+    public NotificationResponse viewNotification(String token, String notificationId) {
+        User user = userRepository.findBySessionToken(token)
+                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
+
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Notification not found."));
+
+        if (!notification.getUserId().equals(user.getId())) {
+            throw new AccessDeniedException("You are not authorized to view this notification.");
+        }
+
+        // Mark as read
+        if (!notification.isRead()) {
+            notification.setRead(true);
+            notificationRepository.save(notification);
+        }
+
+        return new NotificationResponse(
+                notification.getMessage(),
+                notification.isRead(),
+                notification.getAlertLevel(),
+                notification.getTimestamp()
+        );
+    }
+
+    @Override
+    public List<NotificationResponse> viewDailyNotifications(String token) {
+        User user = userRepository.findBySessionToken(token)
+                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
+
+        LocalDate today = LocalDate.now();
+
+        List<Notification> dailyNotifications = notificationRepository
+                .findByUserIdAndTimestampBetween(
+                        user.getId(),
+                        today.atStartOfDay(),
+                        today.atTime(LocalTime.MAX)
+                );
+
+        return dailyNotifications.stream()
+                .sorted(Comparator.comparing(Notification::getTimestamp).reversed())
+                .map(n -> new NotificationResponse(
+                        n.getMessage(),
+                        n.isRead(),
+                        n.getAlertLevel(),
+                        n.getTimestamp()
+                ))
+                .toList();
+    }
+
+//    @Override
+//    public DailySummaryResponse viewDailySummary(String token) {
+//        User user = userRepository.findBySessionToken(token)
+//                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
+//
+//        LocalDate today = LocalDate.now();
+//        LocalDateTime startOfDay = today.atStartOfDay();
+//        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+//
+//        List<AlertLog> todaysAlerts = alertLogRepository.findByUserIdAndTimestampBetween(
+//                user.getId(), startOfDay, endOfDay
+//        );
+//
+//        int totalAlerts = todaysAlerts.size();
+//        int fraudAlerts = (int) todaysAlerts.stream()
+//                .filter(alert -> alert.getSeverity().equalsIgnoreCase("FRAUD")).count();
+//        int safeAlerts = totalAlerts - fraudAlerts;
+//
+//        return new DailySummaryResponse(totalAlerts, fraudAlerts, safeAlerts, today.toString());
+//    }
 
 
 }

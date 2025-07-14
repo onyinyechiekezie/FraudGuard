@@ -40,31 +40,6 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.save(notification);
     }
 
-    @Override
-    public NotificationResponse viewNotification(String token, String notificationId) {
-        User user = userRepository.findBySessionToken(token)
-                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
-
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Notification not found."));
-
-        if (!notification.getUserId().equals(user.getId())) {
-            throw new AccessDeniedException("You are not authorized to view this notification.");
-        }
-
-        // Mark as read
-        if (!notification.isRead()) {
-            notification.setRead(true);
-            notificationRepository.save(notification);
-        }
-
-        return new NotificationResponse(
-                notification.getMessage(),
-                notification.isRead(),
-                notification.getAlertLevel(),
-                notification.getTimestamp()
-        );
-    }
 
     @Override
     public List<com.fraudguard.fraudguard.dto.response.NotificationResponse> getUserNotifications(String token, int page, int size) {
@@ -79,32 +54,6 @@ public class NotificationServiceImpl implements NotificationService {
 //        did query sorting here
         return pagedNotifications.stream()
                 .map(n -> new com.fraudguard.fraudguard.dto.response.NotificationResponse(
-                        n.getMessage(),
-                        n.isRead(),
-                        n.getAlertLevel(),
-                        n.getTimestamp()
-                ))
-                .toList();
-    }
-
-
-    @Override
-    public List<NotificationResponse> viewDailyNotifications(String token) {
-        User user = userRepository.findBySessionToken(token)
-                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
-
-        LocalDate today = LocalDate.now();
-
-        List<Notification> dailyNotifications = notificationRepository
-                .findByUserIdAndTimestampBetween(
-                        user.getId(),
-                        today.atStartOfDay(),
-                        today.atTime(LocalTime.MAX)
-                );
-
-        return dailyNotifications.stream()
-                .sorted(Comparator.comparing(Notification::getTimestamp).reversed())
-                .map(n -> new NotificationResponse(
                         n.getMessage(),
                         n.isRead(),
                         n.getAlertLevel(),

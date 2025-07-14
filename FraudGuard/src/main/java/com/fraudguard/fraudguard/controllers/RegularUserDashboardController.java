@@ -6,10 +6,7 @@ import com.fraudguard.fraudguard.dto.response.RegularUserDashboardResponse;
 import com.fraudguard.fraudguard.services.RegularUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +23,23 @@ public class RegularUserDashboardController {
     ) {
         RegularUserDashboardResponse response = regularUserService.getDashboardData(token);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NotificationResponse> viewNotification(
+            @RequestHeader("Session-Token") String token,
+            @PathVariable String id
+    ) {
+        NotificationResponse response = regularUserService.viewNotification(token, id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<List<NotificationResponse>> getTodayNotifications(
+            @RequestHeader("Session-Token") String token
+    ) {
+        List<NotificationResponse> notifications = regularUserService.viewDailyNotifications(token);
+        return ResponseEntity.ok(notifications);
     }
 
 }

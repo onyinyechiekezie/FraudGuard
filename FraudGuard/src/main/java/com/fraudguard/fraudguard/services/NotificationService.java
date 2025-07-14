@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface NotificationService {
 
-    NotificationResponse viewNotification(String token, String notificationId);
+//    NotificationResponse viewNotification(String token, String notificationId);
 
     List<NotificationResponse> getUserNotifications(String token, int page, int size);
 
-    List<NotificationResponse> viewDailyNotifications(String token);
+//    List<NotificationResponse> viewDailyNotifications(String token);
 
     void markAsRead(String token, String notificationId);
 
