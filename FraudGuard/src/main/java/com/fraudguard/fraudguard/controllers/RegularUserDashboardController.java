@@ -1,9 +1,11 @@
 package com.fraudguard.fraudguard.controllers;
 
 import com.fraudguard.fraudguard.data.models.RegularUser;
+import com.fraudguard.fraudguard.dto.response.DailySummaryResponse;
 import com.fraudguard.fraudguard.dto.response.NotificationResponse;
 import com.fraudguard.fraudguard.dto.response.RegularUserDashboardResponse;
 import com.fraudguard.fraudguard.services.RegularUserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +43,17 @@ public class RegularUserDashboardController {
         List<NotificationResponse> notifications = regularUserService.viewDailyNotifications(token);
         return ResponseEntity.ok(notifications);
     }
+
+    @GetMapping("/summary/daily")
+    public DailySummaryResponse viewDailySummary(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("Missing Authorization token");
+        }
+
+        return regularUserService.viewDailySummary(token);
+    }
+
 
 }
