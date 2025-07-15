@@ -24,5 +24,7 @@ public class AlertLog {
     private String message;
     private String source;
     private AlertLevel alertLevel;
-    private LocalDateTime timestamp;
+    private boolean isFake;
+    private String userFeedback;
+    private LocalDateTime createdAt;
 }
