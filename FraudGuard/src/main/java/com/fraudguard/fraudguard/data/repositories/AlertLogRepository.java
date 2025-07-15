@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface AlertLogRepository extends MongoRepository<AlertLog, String> {
 
+    List<AlertLog> findByUserId(String userId);
+
+
     List<AlertLog> findByUserIdAndTimestampBetween(String userId, LocalDateTime start, LocalDateTime end);
 
 }
