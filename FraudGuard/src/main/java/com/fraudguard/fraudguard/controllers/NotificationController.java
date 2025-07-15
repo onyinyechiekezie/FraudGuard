@@ -25,6 +25,7 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
+
     @PatchMapping("/{id}/read")
     public ResponseEntity<String> markNotificationAsRead(
             @RequestHeader("Session-Token") String token,
@@ -33,4 +34,5 @@ public class NotificationController {
         notificationService.markAsRead(token, id);
         return ResponseEntity.ok("Notification marked as read.");
     }
+
 }

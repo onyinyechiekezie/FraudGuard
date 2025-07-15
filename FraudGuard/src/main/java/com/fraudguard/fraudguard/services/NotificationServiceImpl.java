@@ -5,6 +5,8 @@ import com.fraudguard.fraudguard.data.models.Notification;
 import com.fraudguard.fraudguard.data.models.User;
 import com.fraudguard.fraudguard.data.repositories.NotificationRepository;
 import com.fraudguard.fraudguard.data.repositories.UserRepository;
+import com.fraudguard.fraudguard.dto.response.NotificationResponse;
+import com.fraudguard.fraudguard.exceptions.AccessDeniedException;
 import com.fraudguard.fraudguard.exceptions.ResourceNotFoundException;
 import com.fraudguard.fraudguard.exceptions.UnauthenticatedException;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -35,6 +40,7 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.save(notification);
     }
 
+
     @Override
     public List<com.fraudguard.fraudguard.dto.response.NotificationResponse> getUserNotifications(String token, int page, int size) {
         User user = userRepository.findBySessionToken(token)
@@ -55,6 +61,7 @@ public class NotificationServiceImpl implements NotificationService {
                 ))
                 .toList();
     }
+
 
     @Override
     public void markAsRead(String token, String notificationId) {
