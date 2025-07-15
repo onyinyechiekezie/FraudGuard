@@ -1,12 +1,12 @@
 package com.fraudguard.fraudguard.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class DailySummaryResponse {
 
     private int totalAlerts;

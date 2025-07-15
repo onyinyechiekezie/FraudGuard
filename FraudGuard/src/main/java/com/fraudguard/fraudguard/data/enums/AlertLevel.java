@@ -4,5 +4,5 @@ public enum AlertLevel {
 
     SAFE,
     WARNING,
-    DANGER
+    FRAUD
 }

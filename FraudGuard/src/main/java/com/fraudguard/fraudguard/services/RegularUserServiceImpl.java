@@ -1,12 +1,11 @@
 package com.fraudguard.fraudguard.services;
 
+import com.fraudguard.fraudguard.data.enums.AlertLevel;
+import com.fraudguard.fraudguard.data.models.AlertLog;
 import com.fraudguard.fraudguard.data.models.Notification;
 import com.fraudguard.fraudguard.data.models.RegularUser;
 import com.fraudguard.fraudguard.data.models.User;
-import com.fraudguard.fraudguard.data.repositories.ActivityLogRepository;
-import com.fraudguard.fraudguard.data.repositories.NotificationRepository;
-import com.fraudguard.fraudguard.data.repositories.TransactionLogRepository;
-import com.fraudguard.fraudguard.data.repositories.UserRepository;
+import com.fraudguard.fraudguard.data.repositories.*;
 import com.fraudguard.fraudguard.dto.response.DailySummaryResponse;
 import com.fraudguard.fraudguard.dto.response.NotificationResponse;
 import com.fraudguard.fraudguard.dto.response.RegularUserDashboardResponse;
@@ -30,6 +29,7 @@ public class RegularUserServiceImpl implements RegularUserService {
     private final NotificationRepository notificationRepository;
     private final TransactionLogRepository transactionLogRepository;
     private final ActivityLogRepository activityLogRepository;
+    private final AlertLogRepository alertLogRepository;
 
     @Override
     public RegularUser getRegularUserByToken(String token) {
@@ -136,26 +136,31 @@ public class RegularUserServiceImpl implements RegularUserService {
                 .toList();
     }
 
-//    @Override
-//    public DailySummaryResponse viewDailySummary(String token) {
-//        User user = userRepository.findBySessionToken(token)
-//                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
-//
-//        LocalDate today = LocalDate.now();
-//        LocalDateTime startOfDay = today.atStartOfDay();
-//        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
-//
-//        List<AlertLog> todaysAlerts = alertLogRepository.findByUserIdAndTimestampBetween(
-//                user.getId(), startOfDay, endOfDay
-//        );
-//
-//        int totalAlerts = todaysAlerts.size();
-//        int fraudAlerts = (int) todaysAlerts.stream()
-//                .filter(alert -> alert.getSeverity().equalsIgnoreCase("FRAUD")).count();
-//        int safeAlerts = totalAlerts - fraudAlerts;
-//
-//        return new DailySummaryResponse(totalAlerts, fraudAlerts, safeAlerts, today.toString());
-//    }
+    @Override
+    public DailySummaryResponse viewDailySummary(String token) {
+        User user = userRepository.findBySessionToken(token)
+                .orElseThrow(() -> new UnauthenticatedException("Session expired. Please log in."));
+
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+
+        List<AlertLog> todaysAlerts = alertLogRepository.findByUserIdAndTimestampBetween(
+                user.getId(), startOfDay, endOfDay
+        );
+
+        int fraudAlerts = (int) todaysAlerts.stream()
+                .filter(alert -> alert.getAlertLevel() == AlertLevel.FRAUD)
+                .count();
+
+        int safeAlerts = (int) todaysAlerts.stream()
+                .filter(alert -> alert.getAlertLevel() == AlertLevel.SAFE)
+                .count();
+
+        int totalAlerts = todaysAlerts.size();
+
+        return new DailySummaryResponse(totalAlerts, fraudAlerts, safeAlerts, today.toString());
+    }
 
 
 }

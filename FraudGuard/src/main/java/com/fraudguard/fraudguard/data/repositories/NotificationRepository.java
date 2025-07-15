@@ -4,10 +4,12 @@ import com.fraudguard.fraudguard.data.models.Notification;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository
 public interface NotificationRepository extends MongoRepository<Notification, String> {
 
     List<Notification> findByUserId(String userId);
