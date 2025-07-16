@@ -2,6 +2,7 @@ package com.fraudguard.fraudguard.services;
 
 import com.fraudguard.fraudguard.data.models.AlertLog;
 import com.fraudguard.fraudguard.data.repositories.AlertLogRepository;
+import com.fraudguard.fraudguard.dto.response.AiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,18 +10,20 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class FraudDetectionServiceImpl implements FraudDetectionService{
+public class FraudDetectionServiceImpl implements FraudDetectionService {
 
-    private final AiClient aiClient; // Injected Spring AI client
+    private final AiClientService aiClientService;
     private final AlertLogRepository alertLogRepository;
+    private final TermiiSmsService termiiSmsService;
 
-    public void scanIncomingMessage(String sender, String message) {
+    @Override
+    public void scanIncomingMessage(String userId, String sender, String message, String userPhone) {
         String fullMessage = "Sender: " + sender + "\nMessage: " + message;
 
-        AiResponse response = aiClient.call(fullMessage); // Spring AI analyzes it
+        AiResponse response = aiClientService.call(fullMessage);
 
         AlertLog alert = AlertLog.builder()
-                .userId("system") // or get from context if tied to user
+                .userId(userId)
                 .message(message)
                 .source(sender)
                 .alertLevel(response.getAlertLevel())
@@ -28,7 +31,11 @@ public class FraudDetectionServiceImpl implements FraudDetectionService{
                 .build();
 
         alertLogRepository.save(alert);
+        String alertMessage = "🔎 Alert Level: " + response.getAlertLevel().name()
+                + "\nSender: " + sender
+                + "\nMessage: " + message
+                + "\nExplanation: " + response.getExplanation();
 
-        // You could notify the user here too
+        termiiSmsService.sendSms(userPhone, "FraudGuard", alertMessage, "dnd");
     }
 }

@@ -1,6 +1,7 @@
 package com.fraudguard.fraudguard.controllers;
 
 import com.fraudguard.fraudguard.data.models.SmsPayload;
+import com.fraudguard.fraudguard.services.FraudDetectionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

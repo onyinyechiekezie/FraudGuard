@@ -27,14 +27,14 @@ public class AlertLogServiceImpl implements AlertLogService {
 
         return alertLogRepository.findByUserId(user.getId())
                 .stream()
-                .sorted(Comparator.comparing(AlertLog::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(AlertLog::getTimestamp).reversed())
                 .map(alert -> new AlertLogResponse(
                         alert.getMessage(),
                         alert.getSource(),
                         alert.getAlertLevel(),
                         alert.isFake(),
                         alert.getUserFeedback(),
-                        alert.getCreatedAt()
+                        alert.getTimestamp()
                 ))
                 .toList();
     }
