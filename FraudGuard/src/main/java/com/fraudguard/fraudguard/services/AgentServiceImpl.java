@@ -45,7 +45,7 @@ public class AgentServiceImpl implements AgentService {
         Notification notification = Notification.builder()
                 .userId(agent.getId())
                 .message("Suspicious activity detected.")
-                .alertLevel(AlertLevel.INFO)
+                .alertLevel(AlertLevel.SAFE)
                 .timestamp(LocalDateTime.now())
                 .isRead(false)
                 .build();
@@ -77,9 +77,9 @@ public class AgentServiceImpl implements AgentService {
 
         long totalAlerts = todaysAlerts.size();
 
-        long infoCount = todaysAlerts.stream().filter(n -> n.getAlertLevel() == AlertLevel.INFO).count();
+        long infoCount = todaysAlerts.stream().filter(n -> n.getAlertLevel() == AlertLevel.SAFE).count();
         long warningCount = todaysAlerts.stream().filter(n -> n.getAlertLevel() == AlertLevel.WARNING).count();
-        long criticalCount = todaysAlerts.stream().filter(n -> n.getAlertLevel() == AlertLevel.DANGER).count();
+        long criticalCount = todaysAlerts.stream().filter(n -> n.getAlertLevel() == AlertLevel.FRAUD).count();
 
         String message = "Daily Summary: " + totalAlerts + " alerts — " +
                 infoCount + " INFO, " + warningCount + " WARNING, " + criticalCount + " CRITICAL";
@@ -87,7 +87,7 @@ public class AgentServiceImpl implements AgentService {
         Notification summary = Notification.builder()
                 .userId(agent.getId())
                 .message(message)
-                .alertLevel(AlertLevel.INFO)
+                .alertLevel(AlertLevel.SAFE)
                 .timestamp(LocalDateTime.now())
                 .isRead(false)
                 .build();

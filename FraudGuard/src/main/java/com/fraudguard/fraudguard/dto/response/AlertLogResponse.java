@@ -15,5 +15,5 @@ public class AlertLogResponse {
     private AlertLevel alertLevel;
     private boolean isFake;
     private String userFeedback;
-    private LocalDateTime createdAt;
+    private LocalDateTime timestamp;
 }
