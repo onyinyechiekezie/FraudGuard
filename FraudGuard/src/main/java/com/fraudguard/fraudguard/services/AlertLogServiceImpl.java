@@ -45,7 +45,7 @@ public class AlertLogServiceImpl implements AlertLogService {
                 .orElseThrow(() -> new ResourceNotFoundException("Alert not found"));
 
         alert.setFake(true);
-//        alert.setUserFeedback(feedback != null ? feedback : "");
+
         alert.setUserFeedback(
                 feedback != null && !feedback.isBlank() ? feedback : "No feedback provided"
         );

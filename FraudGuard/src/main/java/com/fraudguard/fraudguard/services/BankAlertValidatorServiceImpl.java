@@ -2,11 +2,13 @@ package com.fraudguard.fraudguard.services;
 
 import com.fraudguard.fraudguard.data.enums.AlertLevel;
 import com.fraudguard.fraudguard.dto.response.AlertValidationResponse;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class BankAlertValidatorServiceImpl implements BankAlertValidatorService {
 
     private static final List<String> trustedSenders = List.of("UBA", "GTBank", "AccessBank");

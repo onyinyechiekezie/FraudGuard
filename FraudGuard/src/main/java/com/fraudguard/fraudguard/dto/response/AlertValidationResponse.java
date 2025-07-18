@@ -12,6 +12,6 @@ public class AlertValidationResponse {
 
     private boolean isFake;
     private AlertLevel alertLevel;
-    private String reason;
+    private String explanation;
 
 }
