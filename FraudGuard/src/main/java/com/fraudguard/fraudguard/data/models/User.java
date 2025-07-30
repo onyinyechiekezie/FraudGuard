@@ -15,11 +15,11 @@ public abstract class User {
 
     @Id
     private String id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
-    private String phonenumber;
+    private String phoneNumber;
     private int age;
     private String location;
     private UserRole role;
