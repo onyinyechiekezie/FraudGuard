@@ -28,8 +28,8 @@ public class UserMapper {
             user = new RegularUser();
         }
 
-        user.setFirstname(request.getFirstname());
-        user.setLastname(request.getLastname());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());

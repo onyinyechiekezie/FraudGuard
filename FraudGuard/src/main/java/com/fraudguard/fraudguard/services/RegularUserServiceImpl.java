@@ -78,7 +78,7 @@ public class RegularUserServiceImpl implements RegularUserService {
         );
 
         return new RegularUserDashboardResponse(
-                "Welcome back, " + user.getFirstname(),
+                "Welcome back, " + user.getFirstName(),
                 notifications,
                 "You logged in " + loginCountToday + " times today.",
                 flagged
