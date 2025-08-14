@@ -30,16 +30,13 @@ jobs:
 
       - name: Start Application in Background
         run: |
-            nohup java -jar target/*.jar
-            
+          nohup java -jar target/*.jar > app.log 2>&1 &
+
+      - name: Wait for app to start
+        run: sleep 15
 
       - name: Test Login Endpoint
         run: |
-            curl -X POST http://localhost:8080/api/auth/login \
-            -H "Content-Type: application/json" \
-            -d '{"email":"testuser@gmail.com","password":"testpass"}'
-
-
-
-
-
+          curl -X POST http://localhost:8080/api/auth/login \
+          -H "Content-Type: application/json" \
+          -d '{"email":"testuser@gmail.com","password":"testpass"}'
