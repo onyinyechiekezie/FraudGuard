@@ -30,7 +30,7 @@ jobs:
 
       - name: Start Application in Background
         run: |
-            nohup java -jar target/*.jar &
+            nohup java -jar target/*.jar
             
 
       - name: Test Login Endpoint
