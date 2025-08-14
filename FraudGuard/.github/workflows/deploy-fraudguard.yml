@@ -1,0 +1,45 @@
+name: Deploy_FraudGuard
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install dependencies
+        run: mvn dependency:resolve
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Start Application in Background
+        run: |
+            nohup java -jar target/*.jar &
+            
+
+      - name: Test Login Endpoint
+        run: |
+            curl -X POST http://localhost:8080/api/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{"email":"testuser@gmail.com","password":"testpass"}'
+
+
+
+
+
