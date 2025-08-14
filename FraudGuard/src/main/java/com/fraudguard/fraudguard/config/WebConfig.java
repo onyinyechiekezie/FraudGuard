@@ -10,11 +10,14 @@ public class WebConfig {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        return addCorsMapping(registry) {
-
-         
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8081", "http://192.168.43.21:8081")  // <- allow frontend port
+                        .allowedOrigins(
+                                "http://localhost:8081",
+                                "http://192.168.43.21:8081"
+                        )  // allow frontend ports
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
