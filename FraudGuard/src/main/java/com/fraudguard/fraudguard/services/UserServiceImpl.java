@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new LoginFailedException("Invalid email or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new LoginFailedException("Invalid email or password");
+            throw new LoginFailedException("Invalid email");
         }
 
         String sessionToken = UUID.randomUUID().toString();
